@@ -1,0 +1,81 @@
+scenario,boot_minutes,model,mae,rmse,r2
+normal,0,Last value (naive),22.4,39.8,0.989
+normal,0,Moving average (3),30.3,50.9,0.982
+normal,0,Ridge regression,24.7,39.6,0.989
+normal,0,Random Forest,25.0,42.0,0.988
+flash_crowd,0,Last value (naive),32.4,95.3,0.961
+flash_crowd,0,Moving average (3),48.7,145.4,0.908
+flash_crowd,0,Ridge regression,40.1,101.1,0.956
+flash_crowd,0,Random Forest,50.5,189.4,0.845
+steady_growth,0,Last value (naive),30.6,55.2,0.987
+steady_growth,0,Moving average (3),41.5,70.8,0.978
+steady_growth,0,Ridge regression,36.1,57.9,0.985
+steady_growth,0,Random Forest,56.7,115.2,0.942
+noisy,0,Last value (naive),211.5,293.8,0.502
+noisy,0,Moving average (3),177.9,249.9,0.64
+noisy,0,Ridge regression,203.1,280.5,0.546
+noisy,0,Random Forest,202.5,279.4,0.549
+normal,5,Last value (naive),33.9,57.4,0.977
+normal,5,Moving average (3),40.1,66.0,0.97
+normal,5,Ridge regression,37.2,56.0,0.978
+normal,5,Random Forest,36.7,59.5,0.975
+flash_crowd,5,Last value (naive),52.6,160.3,0.889
+flash_crowd,5,Moving average (3),67.4,196.2,0.833
+flash_crowd,5,Ridge regression,65.7,170.0,0.875
+flash_crowd,5,Random Forest,70.2,241.0,0.749
+steady_growth,5,Last value (naive),46.4,79.7,0.972
+steady_growth,5,Moving average (3),54.9,91.7,0.963
+steady_growth,5,Ridge regression,57.6,85.1,0.968
+steady_growth,5,Random Forest,75.1,136.3,0.919
+noisy,5,Last value (naive),217.8,306.3,0.459
+noisy,5,Moving average (3),181.6,253.8,0.628
+noisy,5,Ridge regression,192.5,269.1,0.582
+noisy,5,Random Forest,194.3,270.5,0.578
+normal,10,Last value (naive),42.9,71.2,0.965
+normal,10,Moving average (3),48.2,77.5,0.958
+normal,10,Ridge regression,46.8,67.2,0.968
+normal,10,Random Forest,46.3,74.2,0.962
+flash_crowd,10,Last value (naive),70.5,208.2,0.812
+flash_crowd,10,Moving average (3),84.5,237.3,0.756
+flash_crowd,10,Ridge regression,84.8,214.8,0.8
+flash_crowd,10,Random Forest,83.9,256.0,0.716
+steady_growth,10,Last value (naive),58.9,99.0,0.957
+steady_growth,10,Moving average (3),66.0,107.4,0.95
+steady_growth,10,Ridge regression,73.8,104.9,0.952
+steady_growth,10,Random Forest,87.6,144.7,0.909
+noisy,10,Last value (naive),221.7,310.2,0.445
+noisy,10,Moving average (3),182.8,257.3,0.618
+noisy,10,Ridge regression,184.2,253.1,0.63
+noisy,10,Random Forest,189.1,258.3,0.615
+normal,20,Last value (naive),57.2,90.9,0.942
+normal,20,Moving average (3),62.2,94.2,0.938
+normal,20,Ridge regression,58.5,80.5,0.955
+normal,20,Random Forest,54.3,88.5,0.945
+flash_crowd,20,Last value (naive),102.4,281.3,0.658
+flash_crowd,20,Moving average (3),115.6,303.4,0.602
+flash_crowd,20,Ridge regression,108.7,265.8,0.695
+flash_crowd,20,Random Forest,97.2,266.1,0.694
+steady_growth,20,Last value (naive),78.2,125.5,0.931
+steady_growth,20,Moving average (3),84.9,129.6,0.927
+steady_growth,20,Ridge regression,94.7,129.4,0.927
+steady_growth,20,Random Forest,103.6,164.2,0.883
+noisy,20,Last value (naive),223.2,314.8,0.429
+noisy,20,Moving average (3),185.6,259.8,0.611
+noisy,20,Ridge regression,173.9,241.2,0.665
+noisy,20,Random Forest,177.9,249.0,0.643
+normal,30,Last value (naive),69.5,104.7,0.924
+normal,30,Moving average (3),74.9,107.8,0.919
+normal,30,Ridge regression,65.2,87.2,0.947
+normal,30,Random Forest,57.2,93.9,0.939
+flash_crowd,30,Last value (naive),131.9,339.5,0.502
+flash_crowd,30,Moving average (3),140.1,350.2,0.47
+flash_crowd,30,Ridge regression,121.6,291.0,0.634
+flash_crowd,30,Random Forest,105.9,277.8,0.667
+steady_growth,30,Last value (naive),95.0,144.0,0.91
+steady_growth,30,Moving average (3),102.1,147.9,0.905
+steady_growth,30,Ridge regression,107.7,143.8,0.91
+steady_growth,30,Random Forest,119.9,176.2,0.865
+noisy,30,Last value (naive),226.4,313.3,0.435
+noisy,30,Moving average (3),189.8,266.6,0.591
+noisy,30,Ridge regression,176.1,239.1,0.671
+noisy,30,Random Forest,175.2,243.9,0.658

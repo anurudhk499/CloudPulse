@@ -1,0 +1,262 @@
+{% raw %}<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CloudPulse - watch the cloud scale</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--cy:#22d3ee;--mg:#e879f9;--am:#fbbf24;--gr:#34d399;--rd:#fb7185;--mu:#a9b4dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:#eef2ff;font:16px/1.55 "Plus Jakarta Sans",system-ui,sans-serif;background:#0b1030;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(1100px 700px at 10% -10%,#4c1d95aa,transparent),radial-gradient(900px 600px at 100% 20%,#0e7490aa,transparent),linear-gradient(160deg,#0b1030,#150a3d 60%,#0a1b3d)}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.4;z-index:-1;animation:fl 16s ease-in-out infinite alternate}
+.b1{width:380px;height:380px;background:#7c3aed;left:-100px;top:35%}.b2{width:320px;height:320px;background:#06b6d4;right:-80px;top:60%;animation-delay:-7s}
+@keyframes fl{to{transform:translate(70px,-60px) scale(1.2)}}
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.2);border-radius:22px;backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:0 22px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.28)}
+.wrap{max-width:1180px;margin:auto;padding:28px 20px 70px;display:grid;gap:22px}
+h1{margin:0;font-size:clamp(36px,5.4vw,60px);font-weight:800;letter-spacing:-.03em;line-height:1.05;color:#fff}
+.lead{color:var(--mu);max-width:62ch;margin:8px 0 0;font-size:18px}
+.know{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.know div{padding:14px 16px;font-size:14px;color:var(--mu)}.know b{display:block;color:#fff;font-size:16px}
+h2{margin:0 0 4px;font-size:22px;display:flex;align-items:center;gap:12px}
+.n{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--mg));color:#0b1030;font-weight:800;font-size:16px}
+.sub{color:var(--mu);margin:0 0 14px;font-size:15px}
+.sec{padding:22px}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;perspective:900px}
+.opt{font:inherit;color:inherit;text-align:left;cursor:pointer;padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,.2);background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.03));box-shadow:0 12px 24px rgba(0,0,0,.35);transition:transform .2s,box-shadow .2s,border-color .2s;display:grid;gap:2px}
+.opt:hover{transform:translateY(-5px) rotateX(8deg)}
+.opt:active{transform:translateY(1px) scale(.98)}
+.opt.on{border-color:var(--cy);box-shadow:0 0 0 1px var(--cy),0 0 32px #22d3ee66,0 16px 30px rgba(0,0,0,.4);background:linear-gradient(145deg,rgba(34,211,238,.25),rgba(232,121,249,.12))}
+.big{font-size:38px;line-height:1.1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.4))}.opt b{font-size:17px}.opt small{color:var(--mu);font-size:13px}
+:focus-visible{outline:3px solid var(--am);outline-offset:3px}
+.row2{display:flex;flex-wrap:wrap;gap:22px;margin-top:18px;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{font:inherit;color:#fff;cursor:pointer;padding:7px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07)}
+.seg button.on{background:linear-gradient(135deg,var(--cy),var(--mg));color:#0b1030;font-weight:700;border-color:transparent}
+.lab{font-size:14px;color:var(--mu);display:grid;gap:6px}
+input[type=range]{accent-color:var(--mg);width:100%}
+.stage{padding:28px 22px;display:grid;grid-template-columns:140px 1fr 160px 1fr minmax(230px,1.7fr);align-items:center;perspective:1300px;position:relative;overflow:hidden}
+.node{text-align:center;padding:16px 10px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.25);box-shadow:0 0 30px var(--glow,#22d3ee55),0 20px 30px rgba(0,0,0,.45);transform:rotateX(10deg) rotateY(-10deg);transition:box-shadow .3s}
+.node .ico{font-size:36px}.node b{display:block;font-size:20px}.node small{color:var(--mu);font-size:12px}
+.string{position:relative;height:7px;border-radius:7px;background:rgba(255,255,255,.1);overflow:hidden;margin:0 6px;box-shadow:0 0 14px var(--c,#22d3ee) inset}
+.string i{position:absolute;top:0;width:34px;height:100%;border-radius:7px;background:linear-gradient(90deg,transparent,var(--c,#22d3ee),transparent);animation:flow var(--d,2s) linear infinite}
+.string i:nth-child(2){animation-delay:calc(var(--d,2s)/-3)}.string i:nth-child(3){animation-delay:calc(var(--d,2s)/-1.5)}
+@keyframes flow{from{left:-40px}to{left:100%}}
+.fleet{text-align:center}
+.grid{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-height:240px;overflow:auto;padding:10px}
+.vm{width:40px;height:50px;border-radius:10px;position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.3);box-shadow:0 10px 14px rgba(0,0,0,.45),0 0 12px var(--col,#22d3ee44);transform:perspective(260px) rotateX(14deg) rotateY(-14deg);transition:transform .2s}
+.vm:hover{transform:perspective(260px) rotateX(0) rotateY(0) scale(1.1)}
+.vm .bar{position:absolute;left:0;right:0;bottom:0;height:calc(var(--u,0)*100%);background:linear-gradient(0deg,var(--col),#ffffffaa);box-shadow:0 0 14px var(--col);transition:height .2s}
+.vm.boot{border-style:dashed;display:grid;place-items:center;animation:pl 1.2s infinite;box-shadow:none}
+@keyframes pl{50%{opacity:.35}}
+.fleet small{display:block;color:var(--mu);margin-top:6px;font-size:13px}
+.say{margin:14px 0 0;padding:14px 18px;border-radius:16px;background:rgba(255,255,255,.08);font-size:18px;min-height:56px}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+.btn{font:inherit;font-weight:700;color:#0b1030;cursor:pointer;padding:10px 20px;border:0;border-radius:99px;background:linear-gradient(135deg,var(--cy),var(--mg));box-shadow:0 8px 20px #22d3ee44,inset 0 1px 0 #fff8;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}.btn.alt{background:rgba(255,255,255,.12);color:#fff;box-shadow:none;border:1px solid rgba(255,255,255,.25)}
+#scrub{flex:1;min-width:160px}#clock{font-weight:700;min-width:120px;color:var(--am)}
+.meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}
+.meter{padding:16px;box-shadow:0 0 26px color-mix(in srgb,var(--glow,#22d3ee) 35%,transparent),0 18px 36px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.25);transition:box-shadow .3s}
+.meter small{color:var(--mu)}.meter .v{font-size:30px;font-weight:800;display:block;line-height:1.2}.meter .t{font-size:13px;color:var(--mu);min-height:20px}
+.dl{font-size:13px;font-weight:700;min-height:20px;display:block}
+.track{height:8px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden;margin:6px 0}.fill{height:100%;width:0;border-radius:8px;transition:width .25s,background .25s}
+.pop{animation:pop .7s}@keyframes pop{0%{transform:scale(1.05)}100%{transform:scale(1)}}
+.ring{width:96px;height:96px;float:right;margin:-4px -4px 0 0}.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:18px}
+.chartbox{position:relative;height:260px}#head{position:absolute;width:2px;background:var(--am);box-shadow:0 0 12px var(--am);pointer-events:none}
+.ev{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:14px}.ev li{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.08)}.ev span{color:var(--am);font-weight:600;margin-right:6px}
+.score{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.sc{padding:16px;display:grid;gap:6px}
+.sc .row{display:grid;grid-template-columns:96px 1fr 56px;gap:8px;align-items:center;font-size:13px}.sc .track{margin:0}.sc .row div div{height:100%;border-radius:8px}
+details{padding:20px 22px}summary{cursor:pointer;font-size:20px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}th,td{padding:8px;text-align:right;border-bottom:1px solid rgba(255,255,255,.12);white-space:nowrap}th:first-child,td:first-child{text-align:left}th{color:var(--mu)}
+.tw{overflow-x:auto}.cfg{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:12px 0}.cfg input{font:inherit;width:110px;padding:7px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff}
+.note{color:var(--mu);font-size:14px}
+#busy{display:none;position:fixed;inset:0;z-index:9;place-items:center;background:rgba(8,10,35,.7);font-size:22px;backdrop-filter:blur(6px)}#busy.show{display:grid}
+@media(max-width:980px){.stage{grid-template-columns:1fr;gap:6px}.string{height:46px;width:7px;margin:4px auto}.string i{width:100%;height:34px;left:0;animation-name:flowv}@keyframes flowv{from{top:-40px}to{top:100%}}.two{grid-template-columns:1fr}.node{transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex:none}
+.big{display:grid;place-items:center;width:52px;height:52px;border-radius:15px;font-size:28px;color:#fff;background:linear-gradient(135deg,rgba(34,211,238,.35),rgba(232,121,249,.3));border:1px solid rgba(255,255,255,.28);box-shadow:0 8px 18px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.35);filter:none;margin-bottom:6px}
+.opt.on .big{background:linear-gradient(135deg,var(--cy),var(--mg));color:#0b1030}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}.btn.sm{padding:8px 16px;font-size:14px}
+.top{position:sticky;top:12px;z-index:6;max-width:1180px;width:calc(100% - 24px);margin:12px auto 0;padding:10px 16px;display:flex;align-items:center;gap:18px;border-radius:18px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}.brand b{display:block;font-size:19px;font-weight:700;letter-spacing:-.01em;line-height:1.1}.brand small{color:var(--mu);font-size:12px}
+.logo{display:grid;place-items:center;width:38px;height:38px;font-size:22px;border-radius:11px;color:#0b1030;background:linear-gradient(135deg,var(--cy),var(--mg));box-shadow:0 6px 16px #22d3ee55}
+.top nav{display:flex;gap:4px;margin-left:auto}.top nav a{color:var(--mu);text-decoration:none;font-weight:600;font-size:15px;padding:8px 14px;border-radius:99px;transition:background .2s,color .2s}
+.top nav a:hover{color:#fff;background:rgba(255,255,255,.08)}.top nav a.on{color:#fff;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.view{display:none;gap:22px}.view.on{display:grid}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding:40px 4px 6px}
+.hero .lead{font-size:19px;max-width:54ch;margin-top:16px}
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}.cc{padding:20px;display:grid;gap:6px;align-content:start}.cc h3{margin:4px 0 0;font-size:20px}.cc p{margin:0 0 10px;color:var(--mu);font-size:14px}.cc .btn{justify-self:start}
+.art{padding:16px;transform:perspective(1000px) rotateY(-8deg) rotateX(4deg);box-shadow:0 30px 60px rgba(0,0,0,.45),0 0 60px #22d3ee33}.art svg{width:100%;display:block}
+.pulse{stroke-dasharray:420;animation:dash 4s linear infinite}@keyframes dash{from{stroke-dashoffset:420}to{stroke-dashoffset:-420}}
+.led{animation:pl 1.6s infinite}.led.l2{animation-delay:-.5s}.led.l3{animation-delay:-1s}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.feat>div{padding:20px}.feat b{display:block;font-size:17px}.feat p{margin:4px 0 0;color:var(--mu);font-size:14px}
+.sico svg{width:28px;height:28px}.say{display:flex;gap:14px;align-items:center}
+.ic-s{display:inline-block;margin-right:8px;color:var(--cy);font-size:18px}
+.gl{list-style:none;margin:0;padding:0;display:grid;gap:10px}.gl li{padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.07);color:var(--mu);font-size:15px}.gl b{display:block;color:#fff}
+.foot{text-align:center;color:var(--mu);font-size:13px;padding-top:10px}
+@media(max-width:980px){.hero{grid-template-columns:1fr}.art{transform:none}.cta{grid-template-columns:1fr}.top nav{overflow-x:auto}.top .btn{display:none}}
+</style></head><body>
+<div class="bg"></div><div class="blob b1"></div><div class="blob b2"></div>
+<div id="busy">Simulating...</div>
+<header class="top glass"><a class="brand" href="#home"><span class="logo" data-i="logo"></span><span><b>CloudPulse</b><small>Auto-scaling simulator</small></span></a>
+<nav aria-label="Main"><a href="#home" data-nav="home">Home</a><a href="#simulate" data-nav="simulate">Simulator</a><a href="#results" data-nav="results">Results</a><a href="#guide" data-nav="guide">Guide</a></nav>
+<a class="btn sm" href="#simulate"><span data-i="play"></span>Run simulation</a></header>
+<main class="wrap">
+<div class="view" id="v-home">
+<section class="hero"><div><h1>Cloud auto-scaling, made visible.</h1>
+<p class="lead">CloudPulse simulates how a website adds and removes virtual machines as traffic changes, and compares four scaling strategies on cost, page speed and reliability.</p>
+<div class="cta">
+<div class="glass cc"><span class="big" data-i="play"></span><h3>Simulate</h3><p>Replay a traffic situation and watch computers scale up and down in real time.</p><a class="btn" href="#simulate">Start simulation<span data-i="arrow"></span></a></div>
+<div class="glass cc"><span class="big" data-i="chart"></span><h3>Check results</h3><p>Compare strategies side by side on money spent, page speed and time overloaded.</p><a class="btn alt" href="#results">View results<span data-i="arrow"></span></a></div></div></div>
+<div class="art glass"><svg viewBox="0 0 360 250" aria-hidden="true"><defs><linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#e879f9"/></linearGradient></defs>
+<path class="pulse" d="M10 100 C40 100 50 40 80 40 S120 110 150 100 S190 20 220 30 S270 90 300 70 S335 55 350 55" fill="none" stroke="url(#gl)" stroke-width="3.5" stroke-linecap="round"/>
+<g fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.28)"><rect x="30" y="140" width="300" height="28" rx="9"/><rect x="30" y="176" width="300" height="28" rx="9"/><rect x="30" y="212" width="300" height="28" rx="9"/></g>
+<g><circle class="led" cx="50" cy="154" r="4" fill="#34d399"/><circle class="led l2" cx="50" cy="190" r="4" fill="#22d3ee"/><circle class="led l3" cx="50" cy="226" r="4" fill="#e879f9"/></g>
+<g fill="url(#gl)"><rect x="70" y="150" width="190" height="8" rx="4"/><rect x="70" y="186" width="130" height="8" rx="4"/><rect x="70" y="222" width="220" height="8" rx="4"/></g></svg></div></section>
+<section class="feat"><div class="glass"><span class="big" data-i="bolt"></span><b>Four traffic situations</b><p>Normal, sudden spike, steady growth and jumpy traffic.</p></div>
+<div class="glass"><span class="big" data-i="sliders"></span><b>Four scaling strategies</b><p>Fixed, rule-based, AI predictor and a perfect-foresight benchmark.</p></div>
+<div class="glass"><span class="big" data-i="gauge"></span><b>Live metrics</b><p>Load, page speed, cost and overload update as the simulation plays.</p></div></section>
+</div>
+<div class="view" id="v-simulate">
+
+
+
+<section class="glass sec"><h2><span class="n">1</span>What is happening to the website?</h2><p class="sub">Choose the traffic situation.</p>
+<div class="opts" id="sc"></div>
+<div class="row2"><label class="lab" style="min-width:220px">Traffic level: <b id="txv">x1.0</b><input type="range" id="tx" min="0.5" max="2" step="0.1" value="1"></label>
+<div class="lab">Start-up time of a new computer<div class="seg" id="bootSeg"></div></div></div>
+<p class="note">A new rented computer is not instant: it needs minutes to switch on. The longer it takes, the harder it is to keep up.</p></section>
+
+<section class="glass sec"><h2><span class="n">2</span>Who manages the computers?</h2><p class="sub">Choose how the system decides how many computers to rent.</p><div class="opts" id="po"></div></section>
+
+<section class="glass sec"><h2><span class="n">3</span>Watch it live</h2>
+<div class="stage glass" id="stage">
+<div class="node" id="users"><div class="ico" data-i="users"></div><b id="uTxt">0</b><small>visitors per minute</small></div>
+<div class="string" id="s1"><i></i><i></i><i></i></div>
+<div class="node" id="lb"><div class="ico" data-i="split"></div><b>Load balancer</b><small>shares visitors fairly</small></div>
+<div class="string" id="s2"><i></i><i></i><i></i></div>
+<div class="fleet"><div class="grid" id="grid"></div><small id="fleetTxt"></small></div></div>
+<p class="say" id="say"></p>
+<div class="ctrl"><button class="btn" id="play">Play</button><div class="seg" id="spd"><button data-s="6">Slow</button><button data-s="20" class="on">Normal</button><button data-s="80">Fast</button></div><button class="btn alt" id="jump">Jump to busiest moment</button><input type="range" id="scrub" min="0" max="100" value="0" aria-label="Timeline"><span id="clock"></span></div>
+</section>
+
+<section class="meters">
+<div class="meter glass" id="mTraffic"><small>Visitors per minute</small><span class="v"></span><div class="track"><div class="fill"></div></div><span class="dl"></span><span class="t">How much traffic arrives.</span></div>
+<div class="meter glass" id="mCpu"><svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,.12)"/><circle id="ring" cx="50" cy="50" r="40" stroke="#22d3ee" stroke-dasharray="251.3" stroke-dashoffset="251.3" transform="rotate(-90 50 50)"/></svg><small>How busy the computers are</small><span class="v"></span><span class="dl"></span><span class="t">Above 100% means overloaded.</span></div>
+<div class="meter glass" id="mRt"><small>Page speed</small><span class="v"></span><div class="track"><div class="fill"></div></div><span class="dl"></span><span class="t" id="rtTag"></span></div>
+<div class="meter glass" id="mVm"><small>Computers running</small><span class="v"></span><div class="track"><div class="fill"></div></div><span class="dl"></span><span class="t">Each one is billed per hour.</span></div>
+<div class="meter glass" id="mCost"><small>Money spent so far</small><span class="v"></span><div class="track"><div class="fill"></div></div><span class="dl"></span><span class="t">Includes computers still starting.</span></div>
+<div class="meter glass" id="mOver"><small>Time overloaded so far</small><span class="v"></span><div class="track"><div class="fill"></div></div><span class="dl"></span><span class="t" id="ovTag"></span></div>
+</section>
+
+<section class="two"><div class="glass sec"><h2>Traffic vs what the computers can handle</h2><p class="sub">When the pink line drops below the blue area, visitors are turned away.</p><div class="chartbox"><canvas id="chart"></canvas><div id="head"></div></div></div>
+<div class="glass sec"><h2>What the manager just did</h2><ul class="ev" id="ev"></ul></div></section>
+
+</div><div class="view" id="v-results">
+<section><h2 style="margin-bottom:12px">Scoreboard: who handled this situation best?</h2><div class="score" id="score"></div><p class="note">Lower is better for both bars. The perfect-foresight manager cheats, so it only shows the best possible result.</p></section>
+
+<details class="glass"><summary>Technical details (for your report and viva)</summary>
+<div class="cfg"><label class="lab">Capacity per VM (req/min)<input id="capacity" type="number" value="100" min="1"></label><label class="lab">Target utilisation<input id="target" type="number" value="0.75" min="0.3" max="0.95" step="0.05"></label><label class="lab">Price per VM-hour ($)<input id="price" type="number" value="0.05" min="0.001" step="0.01"></label><button class="btn alt" id="rerun">Re-run with these</button></div>
+<div class="tw"><table id="tm"></table></div>
+<h3>Forecast accuracy (test period only)</h3><div class="tw"><table id="tf"></table></div>
+<p class="note">Everything here is a simulation with assumed values: VM capacity, start-up time, price, and a simple response-time estimate (it grows as computers fill up). The default traffic is synthetic unless you replaced data/trace.csv. Models learn from the first 70% of the trace and are tested on the last 30%. The Random Forest cannot predict traffic far above anything it saw in training, so it struggles on spikes. Results show behaviour under these assumptions, not real cloud savings.</p></details>
+</div>
+<div class="view" id="v-guide"><section class="glass sec"><h2>Guide</h2><p class="sub">The few ideas you need to follow the simulation.</p>
+<div class="know"><div><b><span class="ic-s" data-i="cloud"></span>The cloud</b>Computers you rent by the hour instead of buying.</div><div><b><span class="ic-s" data-i="server"></span>Virtual machine (VM)</b>One rented computer. Each glowing block in the simulator is one VM.</div><div><b><span class="ic-s" data-i="sliders"></span>Auto-scaling</b>Renting more VMs when busy and fewer when quiet. That is what is tested here.</div><div><b><span class="ic-s" data-i="clock"></span>Start-up time</b>A new VM needs minutes to switch on, so reacting late means visitors wait or are turned away.</div></div></section>
+<section class="glass sec"><h2>The four managers</h2><ul class="gl"><li><b>Fixed fleet</b>Same number of VMs all day, sized for a busy period. Safe but wasteful.</li><li><b>Rule-based</b>Adds VMs once the existing ones look busy. Simple, but always a little late.</li><li><b>AI predictor</b>A Random Forest forecasts traffic for when new VMs will be ready and orders early.</li><li><b>Perfect foresight</b>Knows the real future. Not possible in practice; it shows the best achievable result.</li></ul></section>
+<section class="glass sec"><h2>Reading the meters</h2><ul class="gl"><li><b>How busy the computers are</b>Visitors divided by capacity. Above 100% means overload.</li><li><b>Page speed</b>A simple estimate that gets slower as VMs fill up.</li><li><b>Time overloaded</b>Share of time when demand exceeded capacity so far.</li></ul><p class="note">All figures come from a simulation with assumed values, not from a real cloud.</p></section></div>
+<footer class="foot">CloudPulse. Cloud Computing academic project. All results are simulated.</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const P={
+logo:'<path d="M17.5 18a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.5 11.5 3.3 3.3 0 0 0 6 18z"/><path d="M7 14h2l1.5-3 2 5 1.5-2h2"/>',
+cloud:'<path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.8A6 6 0 0 0 4.5 12 3.5 3.5 0 0 0 6 19z"/>',
+bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',trend:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+wave:'<path d="M2 12c2-6 4-6 6 0s4 6 6 0 4-6 6 0"/>',zig:'<path d="M3 12l3-6 3 12 3-9 3 6 3-9 3 6"/>',
+server:'<rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/>',
+sliders:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.8 0 4.5 1.8 4.5 4.5"/>',
+split:'<circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5l-6 5.5M12 11.5l6 5.5"/>',
+power:'<path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/>',alert:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+check:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',plus:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+minus:'<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',x:'<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>',
+gauge:'<path d="M4 17a8 8 0 1 1 16 0"/><path d="M12 17l4-5"/>',play:'<path d="M7 4l13 8-13 8z"/>',pause:'<path d="M8 5v14M16 5v14"/>',
+chart:'<path d="M4 20V4M4 20h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'};
+const ic=n=>`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${P[n]}</svg>`;
+function icons(){document.querySelectorAll("[data-i]").forEach(e=>{e.innerHTML=ic(e.dataset.i)})}
+const SC={normal:["wave","Normal day","Regular daily ups and downs"],flash_crowd:["bolt","Sudden spike","A viral moment: traffic jumps 2.5x in minutes"],steady_growth:["trend","Growing fast","Traffic keeps climbing"],noisy:["zig","Jumpy traffic","Random chaotic ups and downs"]};
+const PO={static:["lock","Fixed fleet","Same number of computers all day"],reactive:["sliders","Rule-based","Adds computers after they get busy"],ml_rf:["spark","AI predictor","Forecasts traffic and adds computers early"],oracle:["eye","Perfect foresight","Knows the future: best possible"]};
+const S={sc:"normal",po:"ml_rf",boot:2,tx:1,speed:20,idx:0,play:false,data:null,cache:{}};
+let prev={},chart=null,lastGrid="",lastEv=-1,pk=0;
+function tiles(el,obj,key){el.innerHTML=Object.entries(obj).map(([k,v])=>`<button class="opt${S[key]===k?" on":""}" data-k="${k}"><span class="big">${ic(v[0])}</span><b>${v[1]}</b><small>${v[2]}</small></button>`).join("");
+ el.onclick=e=>{const b=e.target.closest(".opt");if(!b)return;S[key]=b.dataset.k;tiles(el,obj,key);if(key==="sc")load();else{prep();draw()}}}
+function seg(el,opts,key,fn){el.innerHTML=opts.map(o=>`<button data-v="${o[0]}" class="${S[key]==o[0]?"on":""}">${o[1]}</button>`).join("");
+ el.onclick=e=>{const b=e.target.closest("button");if(!b)return;S[key]=+b.dataset.v;seg(el,opts,key,fn);fn()}}
+async function load(){const bz=$("busy");bz.textContent="Simulating...";if(S.view==="simulate")bz.classList.add("show");
+ try{const r=await fetch("/api/simulate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({scenario:S.sc,boot_steps:S.boot,traffic_x:S.tx,capacity:+$("capacity").value,target_util:+$("target").value,price:+$("price").value})});
+  if(!r.ok)throw new Error((await r.json()).error||r.statusText);S.data=await r.json()}catch(e){bz.textContent="Something went wrong: "+e.message+". Is the server running?";bz.classList.add("show");return}
+ bz.classList.remove("show");S.cache={};const D=S.data;
+ S.labels=D.timestamps.map(t=>new Date(t.replace(" ","T")).toLocaleString("en-GB",{weekday:"short",hour:"2-digit",minute:"2-digit"}));
+ S.peak=Math.max(...D.load);pk=D.load.indexOf(S.peak);S.idx=Math.max(0,pk-30);$("scrub").max=D.load.length-1;
+ tech();score();prep();setPlay(S.view==="simulate"&&!S.seen);if(S.view==="simulate")S.seen=1;draw()}
+function prep(){const k=S.po;if(!S.cache[k]){const p=S.data.policies[k],I=S.data.info,h=I.step_minutes/60;let c=0,o=0;const cost=[],over=[];
+  p.vms.forEach((v,i)=>{c+=(v+p.booting[i])*h*I.price;if(S.data.load[i]>p.capacity[i])o++;cost.push(c);over.push(o)});S.cache[k]={cost,over,maxv:Math.max(...p.vms)}}
+ buildChart();lastGrid="";lastEv=-1;prev={}}
+function buildChart(){if(typeof Chart==="undefined")return;const D=S.data,p=D.policies[S.po];if(chart)chart.destroy();
+ chart=new Chart($("chart"),{type:"line",data:{labels:S.labels,datasets:[{label:"Visitors",data:D.load,borderColor:"#22d3ee",backgroundColor:"rgba(34,211,238,.2)",fill:true,borderWidth:1.5,pointRadius:0},{label:"What computers can handle",data:p.capacity,borderColor:"#e879f9",borderWidth:2.5,pointRadius:0,stepped:true}]},
+ options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:"#cdd5f5",boxWidth:12}}},scales:{x:{ticks:{color:"#a9b4dc",maxTicksLimit:7,maxRotation:0},grid:{color:"rgba(255,255,255,.06)"}},y:{ticks:{color:"#a9b4dc"},grid:{color:"rgba(255,255,255,.06)"}}}}})}
+function setM(id,num,text,pct,col,thr){const el=$(id);el.querySelector(".v").textContent=text;const f=el.querySelector(".fill");
+ if(f){f.style.width=Math.max(0,Math.min(pct,100))+"%";f.style.background=col;f.style.boxShadow="0 0 14px "+col}
+ el.style.setProperty("--glow",col);
+ if(prev[id]===undefined)prev[id]=num;
+ else if(Math.abs(num-prev[id])>=thr){const d=num-prev[id],c=el.querySelector(".dl");c.textContent=(d>0?"▲ up ":"▼ down ")+Math.abs(d<10?+d.toFixed(2):Math.round(d)).toLocaleString();c.style.color=d>0?"#fbbf24":"#34d399";
+  el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop");prev[id]=num}}
+function draw(){const D=S.data;if(!D)return;const i=S.idx,p=D.policies[S.po],load=D.load[i],act=p.vms[i],bt=p.booting[i],cap=p.capacity[i],u=load/cap,rt=p.response_ms[i],C=S.cache[S.po];
+ const col=u>1?"#fb7185":u>.85?"#fbbf24":u>.6?"#22d3ee":"#34d399";
+ $("uTxt").textContent=Math.round(load).toLocaleString();
+ const dur=Math.max(.35,2.4-2*Math.min(load/S.peak,1));
+ ["s1","s2"].forEach(id=>{$(id).style.setProperty("--d",dur+"s");$(id).style.setProperty("--c",col)});
+ $("users").style.setProperty("--glow",col);$("lb").style.setProperty("--glow",col);
+ const g=$("grid");g.style.setProperty("--u",Math.min(u,1));g.style.setProperty("--col",col);
+ const key=act+"/"+bt;if(key!==lastGrid){lastGrid=key;g.innerHTML='<div class="vm"><span class="bar"></span></div>'.repeat(act)+'<div class="vm boot">'+ic("power")+'</div>'.repeat(bt)}
+ $("fleetTxt").textContent=`${act} running`+(bt?` · ${bt} starting up`:"")+` · about ${Math.round(load/act)} visitors each per minute`;
+ const sy=u>1?["x","Overloaded. "+act+" computers cannot keep up, so some visitors are turned away.","#fb7185"]:u>.85?["alert","Getting crowded. The computers are almost full.","#fbbf24"]:u>.6?["check","Busy but healthy. The computers have a little room left.","#22d3ee"]:["clock","Calm. Lots of spare room, so you are paying for computers that sit idle.","#34d399"];
+ let m=`<span class="sico" style="color:${sy[2]}">${ic(sy[0])}</span><span>${sy[1]}`;if(bt)m+=` ${bt} new computer${bt>1?"s are":" is"} starting up (takes ${D.info.boot_minutes} min).`;m+="</span>";$("say").innerHTML=m;
+ setM("mTraffic",load,Math.round(load).toLocaleString(),load/S.peak*100,"#22d3ee",S.peak*.04);
+ setM("mCpu",u*100,Math.round(u*100)+"%",0,col,6);$("ring").style.stroke=col;$("ring").style.strokeDashoffset=251.3*(1-Math.min(u,1));
+ const rc=rt<200?"#34d399":rt<600?"#22d3ee":rt<1500?"#fbbf24":"#fb7185";
+ setM("mRt",rt,rt>=5000?"5 s+":Math.round(rt)+" ms",Math.min(rt/2000,1)*100,rc,80);$("rtTag").textContent=rt<200?"Fast":rt<600?"Fine":rt<1500?"Slow":"Very slow";
+ setM("mVm",act,act,act/C.maxv*100,"#e879f9",2);
+ setM("mCost",C.cost[i],"$"+C.cost[i].toFixed(2),C.cost[i]/C.cost[C.cost.length-1]*100,"#fbbf24",1);
+ const op=C.over[i]/(i+1)*100;setM("mOver",C.over[i],op.toFixed(1)+"%",op*8,op>2?"#fb7185":"#34d399",2);$("ovTag").textContent=u>1?"Overloaded right now":"Handling traffic right now";
+ const ev=p.events.filter(e=>e[0]<=i);if(ev.length!==lastEv){lastEv=ev.length;const T={order:ic("plus")+" Ordered NUM new computers",ready:ic("check")+" NUM computers are ready and sharing traffic",remove:ic("minus")+" Switched off NUM computers to save money"};
+  $("ev").innerHTML=ev.slice(-6).reverse().map(e=>`<li><span>${S.labels[e[0]]}</span>${T[e[1]].replace("NUM",e[2])}</li>`).join("")||"<li>Nothing yet. Press play.</li>"}
+ $("scrub").value=i;$("clock").textContent=S.labels[i];
+ if(chart&&chart.chartArea){const a=chart.chartArea,h=$("head");h.style.left=(a.left+i/(D.load.length-1)*(a.right-a.left))+"px";h.style.top=a.top+"px";h.style.height=(a.bottom-a.top)+"px"}}
+function score(){const D=S.data,ks=Object.keys(PO),mx=Math.max(...ks.map(k=>D.policies[k].metrics.cost_usd)),mo=Math.max(.01,...ks.map(k=>D.policies[k].metrics.sla_violation_pct));
+ $("score").innerHTML=ks.map(k=>{const m=D.policies[k].metrics;return `<div class="sc glass"><span class="big">${ic(PO[k][0])}</span><b>${PO[k][1]}</b><div class="row"><small>Money spent</small><div class="track"><div style="width:${m.cost_usd/mx*100}%;background:#fbbf24"></div></div><b>$${m.cost_usd}</b></div><div class="row"><small>Time overloaded</small><div class="track"><div style="width:${m.sla_violation_pct/mo*100}%;background:#fb7185"></div></div><b>${m.sla_violation_pct}%</b></div></div>`}).join("")}
+function tech(){const D=S.data,cols=[["sla_violation_pct","SLA viol. %"],["unserved_pct","Unserved %"],["avg_response_ms","Avg resp. ms"],["p95_response_ms","p95 resp. ms"],["cost_usd","Cost $"],["vm_hours","VM-hours"],["avg_utilization_pct","Avg util. %"],["scaling_actions","Scale actions"]];
+ $("tm").innerHTML="<tr><th>Policy</th>"+cols.map(c=>`<th>${c[1]}</th>`).join("")+"</tr>"+Object.values(D.policies).map(p=>`<tr><td>${p.label}</td>${cols.map(c=>`<td>${p.metrics[c[0]]}</td>`).join("")}</tr>`).join("");
+ $("tf").innerHTML="<tr><th>Forecaster</th><th>MAE</th><th>RMSE</th><th>R&sup2;</th></tr>"+D.forecast.map(f=>`<tr><td>${f.model}</td><td>${f.mae}</td><td>${f.rmse}</td><td>${f.r2}</td></tr>`).join("")}
+function setPlay(b){S.play=b;$("play").innerHTML=ic(b?"pause":"play")+(b?" Pause":" Play");if(b&&S.data&&S.idx>=S.data.load.length-1)S.idx=0}
+let last=0,acc=0;function tick(ts){const dt=Math.min(ts-last,100);last=ts;if(S.play&&S.data){acc+=dt/1000*S.speed;const st=Math.floor(acc);if(st>0){acc-=st;S.idx=Math.min(S.idx+st,S.data.load.length-1);draw();if(S.idx>=S.data.load.length-1)setPlay(false)}}requestAnimationFrame(tick)}
+$("play").innerHTML=ic("play")+" Play";$("play").onclick=()=>setPlay(!S.play);
+$("spd").onclick=e=>{const b=e.target.closest("button");if(!b)return;S.speed=+b.dataset.s;[...$("spd").children].forEach(x=>x.classList.toggle("on",x===b))};
+$("jump").onclick=()=>{S.idx=Math.max(0,pk-30);prev={};lastEv=-1;draw()};
+$("scrub").oninput=e=>{S.idx=+e.target.value;prev={};lastEv=-1;draw()};
+$("tx").oninput=e=>{$("txv").textContent="x"+(+e.target.value).toFixed(1)};
+$("tx").onchange=e=>{S.tx=+e.target.value;load()};
+$("rerun").onclick=load;
+tiles($("sc"),SC,"sc");tiles($("po"),PO,"po");
+seg($("bootSeg"),[[0,"Instant"],[1,"5 min"],[2,"10 min"],[4,"20 min"],[6,"30 min"]],"boot",load);
+const VIEWS=["home","simulate","results","guide"];
+function go(v){v=VIEWS.includes(v)?v:"home";S.view=v;document.querySelectorAll(".view").forEach(e=>e.classList.toggle("on",e.id==="v-"+v));document.querySelectorAll("[data-nav]").forEach(a=>a.classList.toggle("on",a.dataset.nav===v));scrollTo({top:0});
+ if(v==="simulate"){if(chart)chart.resize();if(S.data&&!S.seen){S.seen=1;setPlay(true)}draw()}else if(S.data)setPlay(false)}
+addEventListener("hashchange",()=>go(location.hash.slice(1)));$("busy").onclick=()=>$("busy").classList.remove("show");
+icons();S.view=VIEWS.includes(location.hash.slice(1))?location.hash.slice(1):"home";go(S.view);
+requestAnimationFrame(tick);load();
+</script></body></html>{% endraw %}

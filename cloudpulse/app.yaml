@@ -1,0 +1,4 @@
+# Google App Engine (Standard) deployment:  gcloud app deploy
+runtime: python311
+entrypoint: gunicorn -b :$PORT -w 1 --timeout 120 app:app
+instance_class: F2
